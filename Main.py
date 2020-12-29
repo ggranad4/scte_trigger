@@ -134,6 +134,21 @@ async def read_user_item(network: str):
         networks.append(nodes)
     return networks
     
+
+@app.get("/networks")
+def networks():
+    dict = []
+    count = 0
+    final_network_list= []
+    for nodes in x.find({},{ "network_id" }):
+        dict.append(str(nodes))
+
+    for strings in dict:
+        if "network_id" in strings:
+            final_network_list.append(strings.split(":")[3].split("'")[1])
+    if len(final_network_list) == 0:
+        return "list empty"
+    return final_network_list
     
 '''
     Method POST
@@ -184,6 +199,19 @@ def verify_triggers(response: Response, body: str = Body(..., media_type="text/p
         response.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
         return {"error": "Config file is invalid or corrupted"}
 
+
+'''
+    Method DELETE
+'''
+@app.delete("/remove/{network}")
+async def read_user_item(network: str):
+    try:
+        query = {'network_id': network}
+        s.delete_one(query)
+        return "Data has been successfully removed"
+    except:
+        return "Please Make sure that the data providied is valid and follows configs rules"
+   
 
 '''
     App Run
