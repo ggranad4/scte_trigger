@@ -24,21 +24,24 @@ export class ConfigurationComponent implements OnInit {
 	objectKeys = Object.keys;
 	errorMessage: string;
 	data: any = [];
+	networks:String;
 	
 
 	constructor(private LoadJsonService: LoadJsonService, private httpClient:HttpClient) {
 	}
 	getConfig(base: string = "USD"): Promise<any> {
 		return this.httpClient.get("http://127.0.0.1:8000/get/CONE_123").toPromise();
-	  }
+	}
 
 	async requestData(base) {
 		  this.data = await this.getConfig(base);
 	}
 	getConfigs(){
-		return this.httpClient.get<any>("http://127.0.0.1:8000/get/CONE_123")
-		
-		
+		return this.httpClient.get<any>("http://127.0.0.1:8000/get/CONE_23")
+	}
+
+	getNetworks(){
+		return this.httpClient.get<String>("http://127.0.0.1:8000/networks")
 	}
 
 	
@@ -46,6 +49,9 @@ export class ConfigurationComponent implements OnInit {
   	ngOnInit(): void {
 		this.getConfigs().subscribe(
 			bookArr => this.data = bookArr
+		)
+		this.getNetworks().subscribe(
+			networkArr => this.networks = networkArr
 		)
 		let url = "/assets/config.json"
 		if(localStorage.getItem("config") != null) {
